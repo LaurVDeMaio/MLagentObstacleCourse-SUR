@@ -6,10 +6,13 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
     bool isGrounded;
-    
+
+    Transform originalParent;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        originalParent = transform.parent;
 
     }
 
@@ -56,7 +59,7 @@ public class PlayerController : MonoBehaviour
         if (collision.collider.tag == "Ground")
         {
             isGrounded = false;
-            this.transform.parent = null;
+            this.transform.parent = originalParent;
         }
     }
 }
