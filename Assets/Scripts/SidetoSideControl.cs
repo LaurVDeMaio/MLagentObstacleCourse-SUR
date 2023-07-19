@@ -11,11 +11,11 @@ public class SidetoSideControl : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.x > rightLimit)
+        if (transform.localPosition.x > rightLimit)
         {
             direction = -1;
         }
-        else if (transform.position.x < leftLimit)
+        else if (transform.localPosition.x < leftLimit)
         {
             direction = 1;
         }

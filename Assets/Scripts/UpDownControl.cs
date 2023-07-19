@@ -11,11 +11,11 @@ public class UpDownControl : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y > upLimit)
+        if (transform.localPosition.y > upLimit)
         {
             direction = -1;
         }
-        else if (transform.position.y < downLimit)
+        else if (transform.localPosition.y < downLimit)
         {
             direction = 1;
         }

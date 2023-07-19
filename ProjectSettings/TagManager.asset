@@ -7,6 +7,10 @@ TagManager:
   - Wall
   - Ground
   - Goal
+  - Reward1
+  - Reward2
+  - Reward3
+  - Death
   layers:
   - Default
   - TransparentFX
