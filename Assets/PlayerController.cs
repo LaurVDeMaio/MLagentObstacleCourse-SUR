@@ -15,7 +15,7 @@ public class PlayerController : Agent
     public bool inHumanControl;
 
     //Agent Mode
-    GameObject goal;
+    GameObject goal, startPlat,firstPlat, secPlat, thirdPlat;
     float lastDistance;
     float moveSpeed = 0.10f;
     public static int episodeNum = 0;
@@ -25,15 +25,12 @@ public class PlayerController : Agent
         episodeNum++;
 
         Debug.Log("Beginning Episode: " + episodeNum);
+
         goal = transform.parent.Find("Goal").gameObject;
-
-        //TO DO: play around with random ranges to accomodate for different location
-
-        //putting agent at random x, 0.75, random z
-        transform.localPosition = new Vector3(Random.Range(-8.0f, -1.0f), 0.75f, Random.Range(-3.0f, 3.0f));
-
-        //putting goal at random X, 0.75, random Z
-        goal.transform.localPosition = new Vector3(Random.Range(1.0f, 8.0f), 0.75f, Random.Range(-3.0f, 3.0f));
+        startPlat = transform.parent.Find("StartFloor").gameObject;
+        firstPlat = transform.parent.Find("firstPlatform").gameObject;
+        secPlat = transform.parent.Find("secondPlatform").gameObject;
+        thirdPlat = transform.parent.Find("thirdPlatform").gameObject;
 
         lastDistance = Vector3.Distance(transform.localPosition, goal.transform.localPosition);
     }
@@ -48,11 +45,12 @@ public class PlayerController : Agent
     public override void OnActionReceived(ActionBuffers actions)
     {
         //get two numbers from the model 
-        var x = actions.ContinuousActions[0];
-        var z = actions.ContinuousActions[1];
+        var x = actions.DiscreteActions[0];
+        var y = actions.DiscreteActions[1];
+        var z = actions.DiscreteActions[2];
 
         //move the agent
-        transform.Translate(x * moveSpeed, 0, z * moveSpeed);
+        transform.Translate(x * moveSpeed, y * moveSpeed, z * moveSpeed);
 
         var dist = Vector3.Distance(transform.localPosition, goal.transform.localPosition);
 
@@ -103,10 +101,12 @@ public class PlayerController : Agent
             }
         }
 
-        if(rb.position.y < -5)
+        if(rb.position.y < -3)
         {
-            string currentScene = "SampleScene";
-            UnityEngine.SceneManagement.SceneManager.LoadScene(currentScene);
+            //string currentScene = "SampleScene";
+            //UnityEngine.SceneManagement.SceneManager.LoadScene(currentScene);
+
+            EndEpisode();
         }
     }
 
@@ -124,7 +124,7 @@ public class PlayerController : Agent
             SetReward(1.0f);
             EndEpisode();
         }
-        //TO DO: what do we want to decrease award for?
+ //TO DO: what do we want to decrease award for?
         //else if (collision.gameObject.CompareTag("Wall"))
         //{
         //    Debug.Log("<color=#ff0000>WALLLL</color>");
