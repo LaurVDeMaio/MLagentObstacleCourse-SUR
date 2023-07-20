@@ -11,26 +11,20 @@ public class PlayerController : Agent
     bool isGrounded = false;
     Transform originalParent;
 
-    float lastDist;
-
-    Vector3 startingPos;
-
     //Human Mode
     public bool inHumanControl;
 
     //Agent Mode
     GameObject goal, startPlat,firstPlat, secPlat, thirdPlat;
-    float lastDistance;
+    Vector3 startingPos;
     GameObject trainingArea;
     GameObject environment;
-    float moveSpeed = 0.10f;
-    public static int episodeNum = 0;
+    float lastDist;
+    Stats stats;
 
     public override void OnEpisodeBegin()
     {
-        episodeNum++;
-
-        Debug.Log("Beginning Episode: " + episodeNum);
+        stats.numEpisodes++;
 
         firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
         secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
@@ -112,6 +106,8 @@ public class PlayerController : Agent
         originalParent = transform.parent;
         isGrounded = false;
 
+        stats = transform.Find("Stats").GetComponent<Stats>();
+
         Debug.Log(startingPos + " " + inHumanControl);
 
         trainingArea = transform.parent.gameObject;
@@ -155,6 +151,7 @@ public class PlayerController : Agent
         
     }
 
+   
     void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.tag == "Ground" || collision.collider.tag == "Goal")
@@ -168,6 +165,8 @@ public class PlayerController : Agent
             Debug.Log("<color=#00ff00>GOALLLLL</color>");
             SetReward(5.0f);
             EndEpisode();
+
+            stats.AddGoal(1);
         }
  
     }
@@ -189,6 +188,8 @@ public class PlayerController : Agent
             Debug.Log("<color=#ff0000>OH NOOOO</color>");
             SetReward(-2.0f);
             EndEpisode();
+
+            stats.AddGoal(0);
         }
 
         else if(other.tag == "Reward1")
