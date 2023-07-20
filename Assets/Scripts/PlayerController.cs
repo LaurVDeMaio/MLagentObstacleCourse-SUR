@@ -99,7 +99,7 @@ public class PlayerController : Agent
         }
         else
         {
-            SetReward(-0.01f);
+            SetReward(-0.05f);
         }
 
         lastDist = curdist;
@@ -166,7 +166,7 @@ public class PlayerController : Agent
         if (collision.gameObject.CompareTag("Goal"))
         {
             Debug.Log("<color=#00ff00>GOALLLLL</color>");
-            SetReward(3.0f);
+            SetReward(5.0f);
             EndEpisode();
         }
  
@@ -186,29 +186,29 @@ public class PlayerController : Agent
     {
         if (other.tag == "Death")
         {
-            Debug.Log("<color=#ff0000>OH NOOOO I have fallen</color>");
-            SetReward(-1.0f);
+            Debug.Log("<color=#ff0000>OH NOOOO</color>");
+            SetReward(-2.0f);
             EndEpisode();
         }
 
         else if(other.tag == "Reward1")
         {
             Debug.Log("<color=#0000ff>Reward1</color>");
-            SetReward(0.2f);
+            SetReward(0.5f);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward2")
         {
             Debug.Log("<color=#ffff00>Reward2</color>");
-            SetReward(0.3f);
+            SetReward(0.8f);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward3")
         {
             Debug.Log("<color=#ff00ff>Reward3</color>");
-            SetReward(0.5f);
+            SetReward(1.2f);
             other.enabled = false;
         }
     }
