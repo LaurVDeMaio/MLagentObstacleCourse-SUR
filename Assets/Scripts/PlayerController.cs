@@ -22,6 +22,9 @@ public class PlayerController : Agent
     float lastDist;
     Stats stats;
 
+    RaycastHit hit;
+    LayerMask ground;
+
     public override void OnEpisodeBegin()
     {
         stats.StartEpisode();
@@ -30,6 +33,7 @@ public class PlayerController : Agent
         secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
         thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
 
+        
         transform.position = startingPos;
         lastDist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
     }
@@ -59,10 +63,16 @@ public class PlayerController : Agent
         if(jump == 1 && isGrounded)
         {
             //Debug.Log("Jumped!");
-            rb.AddForce(0, 5f, 0, ForceMode.Impulse);
+            rb.AddForce(0, 3f, 0, ForceMode.Impulse);
+        }
+        else if (jump == 2 && isGrounded)
+        {
+            //Debug.Log("Jumped!");
+            rb.AddForce(0, 5.0f, 0, ForceMode.Impulse);
         }
 
-        if(move == 0)
+
+        if (move == 0)
         {
             //do nothing, no movement
         }
@@ -89,7 +99,7 @@ public class PlayerController : Agent
         
         if(curdist < lastDist)
         {
-            SetReward(0.03f);
+            SetReward(0.01f);
         }
         else
         {
@@ -120,6 +130,8 @@ public class PlayerController : Agent
         firstPlat = environment.transform.Find("firstPlatform").gameObject;
         secPlat = environment.transform.Find("secondPlatform").gameObject;
         thirdPlat = environment.transform.Find("thirdPlatform").gameObject;
+
+        ground = LayerMask.GetMask("Ground");
     }
 
     void Update()
@@ -151,7 +163,25 @@ public class PlayerController : Agent
         
     }
 
-   
+    void FixedUpdate()
+    {
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward), out hit, Mathf.Infinity, ground))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * hit.distance, Color.green);
+            //Debug.Log("<color=#ffffff>Did Hit</color>");
+
+            SetReward(0.001f);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * 1000, Color.red);
+            //Debug.Log("<color=#a86232>Did not Hit</color>");
+
+            //SetReward(-0.03f);
+        }
+    }
+
+
     void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.tag == "Ground" || collision.collider.tag == "Goal")
@@ -195,14 +225,14 @@ public class PlayerController : Agent
         else if(other.tag == "Reward1")
         {
             Debug.Log("<color=#0000ff>Reward1</color>");
-            SetReward(0.8f);
+            SetReward(0.5f);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward2")
         {
             Debug.Log("<color=#ffff00>Reward2</color>");
-            SetReward(0.5f);
+            SetReward(0.8f);
             other.enabled = false;
         }
 
