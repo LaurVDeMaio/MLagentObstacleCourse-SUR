@@ -24,7 +24,7 @@ public class PlayerController : Agent
 
     public override void OnEpisodeBegin()
     {
-        stats.numEpisodes++;
+        stats.StartEpisode();
 
         firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
         secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
@@ -106,7 +106,7 @@ public class PlayerController : Agent
         originalParent = transform.parent;
         isGrounded = false;
 
-        stats = transform.Find("Stats").GetComponent<Stats>();
+        stats = GameObject.FindGameObjectWithTag("Stats").GetComponent<Stats>();
 
         Debug.Log(startingPos + " " + inHumanControl);
 
@@ -195,14 +195,14 @@ public class PlayerController : Agent
         else if(other.tag == "Reward1")
         {
             Debug.Log("<color=#0000ff>Reward1</color>");
-            SetReward(0.5f);
+            SetReward(0.8f);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward2")
         {
             Debug.Log("<color=#ffff00>Reward2</color>");
-            SetReward(0.8f);
+            SetReward(0.5f);
             other.enabled = false;
         }
 

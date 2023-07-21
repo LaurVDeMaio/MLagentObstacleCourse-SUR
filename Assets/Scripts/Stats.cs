@@ -7,7 +7,7 @@ public class Stats : MonoBehaviour
 {
 
     List<int> Goals;
-    public int numEpisodes = 0;
+    int numEpisodes = 0;
     
     void Awake()
     {
@@ -19,26 +19,39 @@ public class Stats : MonoBehaviour
         }
     }
 
+    public void StartEpisode()
+    {
+        numEpisodes++;
+
+        if (numEpisodes % 10 == 0)
+        {
+            Debug.Log("Beginning Episode: " + numEpisodes);
+        }
+    }
+
     public void AddGoal(int x)
     {
         Goals.RemoveAt(0);
 
-        if(x == 1)
-        {
+        if(x == 1) {
             Goals.Add(1);
         }
         else if(x == 0) {
             Goals.Add(0);
         }
 
+        int total = 0;
+        foreach (var g in Goals)
+        {
+            total += g;
+        }
+
+        Debug.Log("Goals: " + total + "/100");
+
     }
     
     void Update()
     {
-        if(numEpisodes % 100 == 0)
-        {
-            Debug.Log("Beginning Episode: " + numEpisodes);
-            Debug.Log("Number of Successes: ");
-        }
+        
     }
 }

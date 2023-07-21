@@ -11,6 +11,7 @@ TagManager:
   - Reward2
   - Reward3
   - Death
+  - Stats
   layers:
   - Default
   - TransparentFX
