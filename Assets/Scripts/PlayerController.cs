@@ -22,6 +22,9 @@ public class PlayerController : Agent
     float lastDist;
     Stats stats;
 
+    public float jumpForce = 5.0f;
+    public float moveForce = 5.0f;
+
     RaycastHit hit;
     LayerMask ground;
 
@@ -60,15 +63,15 @@ public class PlayerController : Agent
 
        // Debug.Log(jump + " " + move);
 
-        if(jump == 1 && isGrounded)
+        //if(jump == 1 && isGrounded)
+        //{
+        //    //Debug.Log("Jumped!");
+        //    rb.AddForce(0, 3f, 0, ForceMode.Impulse);
+        //}
+        if (jump == 1 && isGrounded)
         {
             //Debug.Log("Jumped!");
-            rb.AddForce(0, 3f, 0, ForceMode.Impulse);
-        }
-        else if (jump == 2 && isGrounded)
-        {
-            //Debug.Log("Jumped!");
-            rb.AddForce(0, 5.0f, 0, ForceMode.Impulse);
+            rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
         }
 
 
@@ -76,25 +79,24 @@ public class PlayerController : Agent
         {
             //do nothing, no movement
         }
-
-        else if(move == 1)
+        else if (move == 1)
         {
-            rb.AddForce(-5.0f, 0, 0, ForceMode.Force);
+            rb.AddForce(0, 0, moveForce, ForceMode.Force);
         }
         else if (move == 2)
         {
-            rb.AddForce(5.0f, 0, 0, ForceMode.Force);
+            rb.AddForce(0, 0, -moveForce, ForceMode.Force);
         }
-
-        else if (move == 3)
+        else if(move == 3)
         {
-            rb.AddForce(0, 0, 5.0f, ForceMode.Force);
+            rb.AddForce(-moveForce, 0, 0, ForceMode.Force);
         }
         else if (move == 4)
         {
-            rb.AddForce(0, 0, -5.0f, ForceMode.Force);
+            rb.AddForce(moveForce, 0, 0, ForceMode.Force);
         }
 
+        
         var curdist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
         
         if(curdist < lastDist)
