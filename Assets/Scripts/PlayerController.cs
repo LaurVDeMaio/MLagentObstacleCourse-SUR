@@ -36,8 +36,14 @@ public class PlayerController : Agent
         stats.StartEpisode();
 
         firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        if (secPlat != null)
+        {
+            secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        }
+        if (thirdPlat != null)
+        {
+            thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        }
 
         
         transform.position = startingPos;
@@ -50,10 +56,10 @@ public class PlayerController : Agent
         sensor.AddObservation(transform.localPosition); //X,Y,Z of the agent
         sensor.AddObservation(startPlat.transform.localPosition);
         sensor.AddObservation(firstPlat.transform.localPosition);
-        sensor.AddObservation(secPlat.transform.localPosition);
-        sensor.AddObservation(thirdPlat.transform.localPosition);
+        if (secPlat != null) {sensor.AddObservation(secPlat.transform.localPosition);}
+        if (thirdPlat != null) { sensor.AddObservation(thirdPlat.transform.localPosition); }
         sensor.AddObservation(goal.transform.localPosition);
-
+       
     }
 
     public override void OnActionReceived(ActionBuffers actions)
