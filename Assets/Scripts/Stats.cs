@@ -8,6 +8,8 @@ public class Stats : MonoBehaviour
 
     List<int> Goals;
     int numEpisodes = 0;
+
+    int highest = 0;
     
     void Awake()
     {
@@ -46,7 +48,9 @@ public class Stats : MonoBehaviour
             total += g;
         }
 
-        Debug.Log("Goals: " + total + "/100");
+        if (total > highest) highest = total;
+
+        Debug.Log("Goals: " + total + "/100 -- " + highest);
 
     }
     

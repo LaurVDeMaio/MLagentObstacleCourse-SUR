@@ -23,14 +23,14 @@ public class PlayerController : Agent
     Stats stats;
 
     private float jumpForce = 5.0f;
-    private float moveForce = 5.0f;
+    private float moveForce = 20.0f;
 
     private float deathReward = 10.0f;
-    private float r1 = 0.5f;
-    private float r2 = 0.8f;
-    private float r3 = 1.2f;
-    private float goalReward = 5.0f;
-    private float rCloser = 0.01f;
+    private float r1 = 1.0f;
+    private float r2 = 2.0f;
+    private float r3 = 4.0f;
+    private float goalReward = 8.0f;
+    private float rCloser = 0.02f;
     private float rFurther = 0.05f;
 
     RaycastHit hit;
@@ -59,6 +59,8 @@ public class PlayerController : Agent
 
         jump = 0;
         move = 0;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
