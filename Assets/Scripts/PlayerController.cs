@@ -8,7 +8,7 @@ using Unity.MLAgents.Actuators;
 public class PlayerController : Agent
 {
     Rigidbody rb;
-    bool isGrounded = false;
+    public bool isGrounded = false;
     Transform originalParent;
 
     //Human Mode
@@ -22,16 +22,16 @@ public class PlayerController : Agent
     float lastDist;
     Stats stats;
 
-    public float jumpForce = 5.0f;
-    public float moveForce = 5.0f;
+    private float jumpForce = 3.0f;
+    private float moveForce = 5.0f;
 
-    public float deathReward = -2.0f;
-    public float r1 = 0.5f;
-    public float r2 = 0.8f;
-    public float r3 = 1.2f;
-    public float goalReward = 5.0f;
-    public float rCloser = 0.01f;
-    public float rFurther = 0.05f;
+    private float deathReward = -2.0f;
+    private float r1 = 0.5f;
+    private float r2 = 0.8f;
+    private float r3 = 1.2f;
+    private float goalReward = 5.0f;
+    private float rCloser = 0.01f;
+    private float rFurther = 0.05f;
 
     RaycastHit hit;
     LayerMask ground;
@@ -142,12 +142,21 @@ public class PlayerController : Agent
         environment = trainingArea.transform.Find("Environment").gameObject;
 
         goal = trainingArea.transform.Find("Goal").gameObject;
-        startPlat = environment.transform.Find("StartFloor").gameObject;
-        firstPlat = environment.transform.Find("firstPlatform").gameObject;
-        secPlat = environment.transform.Find("secondPlatform").gameObject;
-        thirdPlat = environment.transform.Find("thirdPlatform").gameObject;
+        startPlat = FindPlat("StartFloor");
+        firstPlat = FindPlat("firstPlatform");
+        secPlat = FindPlat("secondPlatform");
+        thirdPlat = FindPlat("thirdPlatform");
 
         ground = LayerMask.GetMask("Ground");
+    }
+
+    GameObject FindPlat(string s)
+    {
+        Transform t;
+
+        t = environment.transform.Find(s);
+        if (t == null) return null;
+        else { return t.gameObject; }
     }
 
     void Update()
@@ -181,20 +190,20 @@ public class PlayerController : Agent
 
     void FixedUpdate()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward), out hit, Mathf.Infinity, ground))
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * hit.distance, Color.green);
-            //Debug.Log("<color=#ffffff>Did Hit</color>");
+        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward), out hit, Mathf.Infinity, ground))
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * hit.distance, Color.green);
+        //    //Debug.Log("<color=#ffffff>Did Hit</color>");
 
-            SetReward(0.001f);
-        }
-        else
-        {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * 1000, Color.red);
-            //Debug.Log("<color=#a86232>Did not Hit</color>");
+        //    SetReward(0.001f);
+        //}
+        //else
+        //{
+        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * 1000, Color.red);
+        //    //Debug.Log("<color=#a86232>Did not Hit</color>");
 
-            //SetReward(-0.03f);
-        }
+        //    //SetReward(-0.03f);
+        //}
     }
 
 
@@ -219,8 +228,8 @@ public class PlayerController : Agent
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.collider.tag == "Ground")
-        {
+        if (collision.collider.tag == "Ground" || collision.collider.tag == "Goal")
+        { 
             isGrounded = false;
             this.transform.parent = originalParent;
         }
