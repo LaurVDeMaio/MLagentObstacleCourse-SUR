@@ -22,10 +22,10 @@ public class PlayerController : Agent
     float lastDist;
     Stats stats;
 
-    private float jumpForce = 3.0f;
+    private float jumpForce = 5.0f;
     private float moveForce = 5.0f;
 
-    private float deathReward = -2.0f;
+    private float deathReward = 10.0f;
     private float r1 = 0.5f;
     private float r2 = 0.8f;
     private float r3 = 1.2f;
@@ -35,6 +35,9 @@ public class PlayerController : Agent
 
     RaycastHit hit;
     LayerMask ground;
+
+    int jump = 0;
+    int move = 0;
 
     public override void OnEpisodeBegin()
     {
@@ -53,6 +56,9 @@ public class PlayerController : Agent
         
         transform.position = startingPos;
         lastDist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
+
+        jump = 0;
+        move = 0;
     }
 
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
@@ -72,21 +78,28 @@ public class PlayerController : Agent
         if (inHumanControl) return;
 
         //get two numbers from the model 
-        var jump = actions.DiscreteActions[0];
-        var move = actions.DiscreteActions[1];
+        jump = actions.DiscreteActions[0];
+        move = actions.DiscreteActions[1];
 
-       // Debug.Log(jump + " " + move);
+       
+    }
+
+    void DoTheThing()
+    {
+        if (jump == 1 && isGrounded)
+        {
+            //Debug.Log("Jumped!");
+            rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
+        }
+
+        // Debug.Log(jump + " " + move);
 
         //if(jump == 1 && isGrounded)
         //{
         //    //Debug.Log("Jumped!");
         //    rb.AddForce(0, 3f, 0, ForceMode.Impulse);
         //}
-        if (jump == 1 && isGrounded)
-        {
-            //Debug.Log("Jumped!");
-            rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
-        }
+
 
 
         if (move == 0)
@@ -101,7 +114,7 @@ public class PlayerController : Agent
         {
             rb.AddForce(0, 0, -moveForce, ForceMode.Force);
         }
-        else if(move == 3)
+        else if (move == 3)
         {
             rb.AddForce(-moveForce, 0, 0, ForceMode.Force);
         }
@@ -110,10 +123,10 @@ public class PlayerController : Agent
             rb.AddForce(moveForce, 0, 0, ForceMode.Force);
         }
 
-        
+
         var curdist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
-        
-        if(curdist < lastDist)
+
+        if (curdist < lastDist)
         {
             SetReward(rCloser);
         }
@@ -163,25 +176,34 @@ public class PlayerController : Agent
     {
         if (inHumanControl)
         {
+            jump = 0;
+            move = 0;
+
             if (Input.GetKey(KeyCode.Space) && isGrounded)
             {
-                rb.AddForce(0, 1f, 0, ForceMode.Impulse);
-            }
-
-            if (Input.GetKey(KeyCode.A))
-            {
-                rb.AddForce(-5.0f, 0, 0, ForceMode.Force);
-            }
-
-            if (Input.GetKey(KeyCode.D))
-            {
-                rb.AddForce(5.0f, 0, 0, ForceMode.Force);
+                jump = 1;
             }
 
             if (Input.GetKey(KeyCode.W))
             {
-                rb.AddForce(0, 0, 5.0f, ForceMode.Force);
+                move = 1;
             }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                move = 2;
+            }
+
+            else if (Input.GetKey(KeyCode.A))
+            {
+                move = 3;
+            }
+
+            else if (Input.GetKey(KeyCode.D))
+            {
+                move = 4;
+            }
+
+           
         }
 
 
@@ -190,6 +212,7 @@ public class PlayerController : Agent
 
     void FixedUpdate()
     {
+        DoTheThing();
         //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward), out hit, Mathf.Infinity, ground))
         //{
         //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * hit.distance, Color.green);
@@ -240,8 +263,8 @@ public class PlayerController : Agent
     {
         if (other.tag == "Death")
         {
-            Debug.Log("<color=#ff0000>OH NOOOO</color>");
-            SetReward(deathReward);
+            //Debug.Log("<color=#ff0000>OH NOOOO</color>");
+            SetReward(-deathReward);
             EndEpisode();
 
             stats.AddGoal(0);
@@ -249,21 +272,21 @@ public class PlayerController : Agent
 
         else if(other.tag == "Reward1")
         {
-            Debug.Log("<color=#0000ff>Reward1</color>");
+           // Debug.Log("<color=#0000ff>Reward1</color>");
             SetReward(r1);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward2")
         {
-            Debug.Log("<color=#ffff00>Reward2</color>");
+           // Debug.Log("<color=#ffff00>Reward2</color>");
             SetReward(r2);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward3")
         {
-            Debug.Log("<color=#ff00ff>Reward3</color>");
+            //Debug.Log("<color=#ff00ff>Reward3</color>");
             SetReward(r3);
             other.enabled = false;
         }
