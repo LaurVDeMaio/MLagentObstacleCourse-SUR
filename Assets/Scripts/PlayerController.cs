@@ -23,7 +23,7 @@ public class PlayerController : Agent
     Stats stats;
 
     private float jumpForce = 5.0f;
-    private float moveForce = 20.0f;
+    private float moveForce = 15.0f;
 
     private float deathReward = 10.0f;
     private float r1 = 1.0f;
