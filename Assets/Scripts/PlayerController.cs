@@ -25,6 +25,11 @@ public class PlayerController : Agent
     public float jumpForce = 5.0f;
     public float moveForce = 5.0f;
 
+    public float deathReward = -2.0f;
+    public float r1 = 0.5f;
+    public float r2 = 0.8f;
+    public float r3 = 1.2f;
+    public float goalReward = 5.0f;
     public float rCloser = 0.01f;
     public float rFurther = 0.05f;
 
@@ -204,7 +209,7 @@ public class PlayerController : Agent
         if (collision.gameObject.CompareTag("Goal"))
         {
             Debug.Log("<color=#00ff00>GOALLLLL</color>");
-            SetReward(5.0f);
+            SetReward(goalReward);
             EndEpisode();
 
             stats.AddGoal(1);
@@ -227,7 +232,7 @@ public class PlayerController : Agent
         if (other.tag == "Death")
         {
             Debug.Log("<color=#ff0000>OH NOOOO</color>");
-            SetReward(-2.0f);
+            SetReward(deathReward);
             EndEpisode();
 
             stats.AddGoal(0);
@@ -236,21 +241,21 @@ public class PlayerController : Agent
         else if(other.tag == "Reward1")
         {
             Debug.Log("<color=#0000ff>Reward1</color>");
-            SetReward(0.5f);
+            SetReward(r1);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward2")
         {
             Debug.Log("<color=#ffff00>Reward2</color>");
-            SetReward(0.8f);
+            SetReward(r2);
             other.enabled = false;
         }
 
         else if (other.tag == "Reward3")
         {
             Debug.Log("<color=#ff00ff>Reward3</color>");
-            SetReward(1.2f);
+            SetReward(r3);
             other.enabled = false;
         }
     }
