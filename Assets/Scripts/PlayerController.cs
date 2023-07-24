@@ -25,6 +25,9 @@ public class PlayerController : Agent
     public float jumpForce = 5.0f;
     public float moveForce = 5.0f;
 
+    public float rCloser = 0.01f;
+    public float rFurther = 0.05f;
+
     RaycastHit hit;
     LayerMask ground;
 
@@ -101,11 +104,11 @@ public class PlayerController : Agent
         
         if(curdist < lastDist)
         {
-            SetReward(0.01f);
+            SetReward(rCloser);
         }
         else
         {
-            SetReward(-0.05f);
+            SetReward(-rFurther);
         }
 
         lastDist = curdist;
