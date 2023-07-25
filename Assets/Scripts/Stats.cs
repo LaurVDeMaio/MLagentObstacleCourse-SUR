@@ -10,7 +10,13 @@ public class Stats : MonoBehaviour
     int numEpisodes = 0;
 
     int highest = 0;
-    
+    int highepisode = 0;
+    System.TimeSpan hightime;
+
+    System.Diagnostics.Stopwatch stopwatch;
+
+    string csv = "";
+
     void Awake()
     {
         Goals = new List<int>();
@@ -19,6 +25,11 @@ public class Stats : MonoBehaviour
         {
             Goals.Add(0);
         }
+
+        stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
+        csv = "highest,episode,time\n";
     }
 
     public void StartEpisode()
@@ -48,14 +59,22 @@ public class Stats : MonoBehaviour
             total += g;
         }
 
-        if (total > highest) highest = total;
+        if (total > highest)
+        {
+            highest = total;
+            hightime = stopwatch.Elapsed;
+            highepisode = numEpisodes; // numEpisodes may be slightly off
+            csv += highest + "," + highepisode + "," + ConvertTime(hightime) + "\n";
+            System.IO.File.WriteAllText("stats.csv", csv);
+        }
 
-        Debug.Log("Goals: " + total + "/100 -- " + highest);
+        Debug.Log("Goals: " + total + "/100 -- " + highest + " -- " + ConvertTime(hightime) + " -- " + highepisode);
+    }
 
+    string ConvertTime(System.TimeSpan ts)
+    {
+        return System.String.Format("{0:00}:{1:00}:{2:00}",
+            ts.Hours, ts.Minutes, ts.Seconds);
     }
     
-    void Update()
-    {
-        
-    }
 }

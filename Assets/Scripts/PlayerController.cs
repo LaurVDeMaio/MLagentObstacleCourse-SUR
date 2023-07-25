@@ -22,14 +22,14 @@ public class PlayerController : Agent
     float lastDist;
     Stats stats;
 
-    private float jumpForce = 5.0f;
+    private float jumpForce = 2.5f;
     private float moveForce = 15.0f;
 
-    private float deathReward = 10.0f;
-    private float r1 = 1.0f;
-    private float r2 = 2.0f;
+    private float deathReward = 20.0f;
+    private float r1 = 4.0f;
+    private float r2 = 4.0f;
     private float r3 = 4.0f;
-    private float goalReward = 8.0f;
+    private float goalReward = 12.0f;
     private float rCloser = 0.02f;
     private float rFurther = 0.05f;
 
@@ -66,11 +66,24 @@ public class PlayerController : Agent
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
     {
         if (inHumanControl) return;
+
+        // 3 floats
         sensor.AddObservation(transform.localPosition); //X,Y,Z of the agent
+
+        // 3 floats
+        sensor.AddObservation(rb.velocity);
+
+        // 3 floats
         sensor.AddObservation(startPlat.transform.localPosition);
+
+        // 3 floats
         sensor.AddObservation(firstPlat.transform.localPosition);
-        if (secPlat != null) {sensor.AddObservation(secPlat.transform.localPosition);}
-        if (thirdPlat != null) { sensor.AddObservation(thirdPlat.transform.localPosition); }
+
+        
+        if (secPlat != null) {sensor.AddObservation(secPlat.transform.localPosition);} // 3 if used
+        if (thirdPlat != null) { sensor.AddObservation(thirdPlat.transform.localPosition); } // 3 if used
+
+        // 3 floats
         sensor.AddObservation(goal.transform.localPosition);
        
     }
@@ -149,7 +162,7 @@ public class PlayerController : Agent
 
         stats = GameObject.FindGameObjectWithTag("Stats").GetComponent<Stats>();
 
-        Debug.Log(startingPos + " " + inHumanControl);
+//        Debug.Log(startingPos + " " + inHumanControl);
 
         trainingArea = transform.parent.gameObject;
         if (trainingArea.name != "TrainingArea") trainingArea = trainingArea.transform.parent.gameObject;
@@ -215,20 +228,6 @@ public class PlayerController : Agent
     void FixedUpdate()
     {
         DoTheThing();
-        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward), out hit, Mathf.Infinity, ground))
-        //{
-        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * hit.distance, Color.green);
-        //    //Debug.Log("<color=#ffffff>Did Hit</color>");
-
-        //    SetReward(0.001f);
-        //}
-        //else
-        //{
-        //    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down + Vector3.forward) * 1000, Color.red);
-        //    //Debug.Log("<color=#a86232>Did not Hit</color>");
-
-        //    //SetReward(-0.03f);
-        //}
     }
 
 
