@@ -15,7 +15,7 @@ public class PlayerController : Agent
     public bool inHumanControl;
 
     //Agent Mode
-    GameObject goal, startPlat,firstPlat, secPlat, thirdPlat;
+    GameObject goal, startPlat,firstPlat, secPlat, thirdPlat, fourthPlat;
     Vector3 startingPos;
     GameObject trainingArea;
     GameObject environment;
@@ -29,6 +29,7 @@ public class PlayerController : Agent
     private float r1 = 4.0f;
     private float r2 = 4.0f;
     private float r3 = 4.0f;
+    private float r4 = 4.0f;
     private float goalReward = 12.0f;
     private float rCloser = 0.02f;
     private float rFurther = 0.05f;
@@ -54,8 +55,11 @@ public class PlayerController : Agent
         {
             thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
         }
+        if (fourthPlat != null)
+        {
+            fourthPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        }
 
-        
         transform.position = startingPos;
         lastDist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
 
@@ -84,6 +88,8 @@ public class PlayerController : Agent
         
         if (secPlat != null) {sensor.AddObservation(secPlat.transform.localPosition);} // 3 if used
         if (thirdPlat != null) { sensor.AddObservation(thirdPlat.transform.localPosition); } // 3 if used
+        if (fourthPlat != null) { sensor.AddObservation(fourthPlat.transform.localPosition); } // 3 if used
+
 
         // 3 floats
         sensor.AddObservation(goal.transform.localPosition);
@@ -176,6 +182,7 @@ public class PlayerController : Agent
         firstPlat = FindPlat("firstPlatform");
         secPlat = FindPlat("secondPlatform");
         thirdPlat = FindPlat("thirdPlatform");
+        fourthPlat = FindPlat("fourthPlatform");
 
         ground = LayerMask.GetMask("Ground");
     }
@@ -291,6 +298,13 @@ public class PlayerController : Agent
         {
             //Debug.Log("<color=#ff00ff>Reward3</color>");
             SetReward(r3);
+            other.enabled = false;
+        }
+
+        else if (other.tag == "Reward4")
+        {
+            //Debug.Log("<color=#ff00ff>Reward4</color>");
+            SetReward(r4);
             other.enabled = false;
         }
     }
