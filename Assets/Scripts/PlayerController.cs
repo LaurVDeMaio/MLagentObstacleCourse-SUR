@@ -46,20 +46,11 @@ public class PlayerController : Agent
     {
         myepisode = stats.StartEpisode();
 
-        firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        if (secPlat != null)
-        {
-            secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        }
-        if (thirdPlat != null)
-        {
-            thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        }
-        if (fourthPlat != null)
-        {
-            fourthPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
-        }
-
+        if (firstPlat != null) firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        if (secPlat != null) secPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        if (thirdPlat != null) thirdPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        if (fourthPlat != null) fourthPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
+        
         transform.position = startingPos;
         lastDist = Mathf.Abs(goal.transform.localPosition.z - transform.localPosition.z);
 
@@ -83,9 +74,7 @@ public class PlayerController : Agent
         sensor.AddObservation(startPlat.transform.localPosition);
 
         // 3 floats
-        sensor.AddObservation(firstPlat.transform.localPosition);
-
-        
+        if (firstPlat != null) sensor.AddObservation(firstPlat.transform.localPosition);
         if (secPlat != null) {sensor.AddObservation(secPlat.transform.localPosition);} // 3 if used
         if (thirdPlat != null) { sensor.AddObservation(thirdPlat.transform.localPosition); } // 3 if used
         if (fourthPlat != null) { sensor.AddObservation(fourthPlat.transform.localPosition); } // 3 if used
