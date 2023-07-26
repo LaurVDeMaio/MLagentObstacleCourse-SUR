@@ -39,9 +39,11 @@ public class PlayerController : Agent
     int jump = 0;
     int move = 0;
 
+    int myepisode = 0;
+
     public override void OnEpisodeBegin()
     {
-        stats.StartEpisode();
+        myepisode = stats.StartEpisode();
 
         firstPlat.transform.Find("trigger").GetComponent<BoxCollider>().enabled = true;
         if (secPlat != null)
@@ -245,7 +247,7 @@ public class PlayerController : Agent
             SetReward(goalReward);
             EndEpisode();
 
-            stats.AddGoal(1);
+            stats.AddGoal(myepisode, 1);
         }
  
     }
@@ -268,7 +270,7 @@ public class PlayerController : Agent
             SetReward(-deathReward);
             EndEpisode();
 
-            stats.AddGoal(0);
+            stats.AddGoal(myepisode, 0);
         }
 
         else if(other.tag == "Reward1")

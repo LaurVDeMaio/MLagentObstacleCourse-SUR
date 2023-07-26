@@ -16,6 +16,7 @@ public class Stats : MonoBehaviour
     System.Diagnostics.Stopwatch stopwatch;
 
     string csv = "";
+    string csv_filename = "";
 
     void Awake()
     {
@@ -29,20 +30,32 @@ public class Stats : MonoBehaviour
         stopwatch = new System.Diagnostics.Stopwatch();
         stopwatch.Start();
 
+        string scene_name = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        string date_time = System.DateTime.Now.ToString("yyyyddMHHmmss");
+        string folder = "csv/";
+
+#if UNITY_EDITOR_WIN
+folder = "csv\\";
+#endif
+
+        csv_filename = folder + "stats_" + scene_name + "_" + date_time + ".csv";
         csv = "highest,episode,time\n";
     }
 
-    public void StartEpisode()
+    public int StartEpisode()
     {
+
         numEpisodes++;
 
         if (numEpisodes % 10 == 0)
         {
             Debug.Log("Beginning Episode: " + numEpisodes);
         }
+
+        return numEpisodes;
     }
 
-    public void AddGoal(int x)
+    public void AddGoal(int agentEpisode, int x)
     {
         Goals.RemoveAt(0);
 
@@ -63,9 +76,9 @@ public class Stats : MonoBehaviour
         {
             highest = total;
             hightime = stopwatch.Elapsed;
-            highepisode = numEpisodes; // numEpisodes may be slightly off
+            highepisode = agentEpisode;
             csv += highest + "," + highepisode + "," + ConvertTime(hightime) + "\n";
-            System.IO.File.WriteAllText("stats.csv", csv);
+            System.IO.File.WriteAllText(csv_filename, csv);
         }
 
         Debug.Log("Goals: " + total + "/100 -- " + highest + " -- " + ConvertTime(hightime) + " -- " + highepisode);
