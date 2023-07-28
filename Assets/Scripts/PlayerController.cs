@@ -70,6 +70,9 @@ public class PlayerController : Agent
         // 3 floats
         sensor.AddObservation(rb.velocity);
 
+        // 1 value
+        sensor.AddObservation(isGrounded);
+
         // 3 floats
         sensor.AddObservation(startPlat.transform.localPosition);
 
