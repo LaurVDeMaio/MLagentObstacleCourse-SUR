@@ -15,7 +15,7 @@ public class PlayerController : Agent
     public bool inHumanControl;
 
     //Agent Mode
-    GameObject goal, startPlat,firstPlat, secPlat, thirdPlat, fourthPlat;
+    GameObject goal, startPlat, firstPlat, secPlat, thirdPlat, fourthPlat, goalPlat;
     Vector3 startingPos;
     GameObject trainingArea;
     GameObject environment;
@@ -42,6 +42,25 @@ public class PlayerController : Agent
 
     int myepisode = 0;
 
+    public Vector3 RandomizePlatform(Vector3 pos)
+    {
+        pos.y = Random.Range(-1.0f, 1.0f);
+        return pos;
+    }
+
+    public void RandomizePlatforms()
+    {
+        if (firstPlat != null) firstPlat.transform.localPosition = RandomizePlatform(firstPlat.transform.localPosition);
+        if (secPlat != null) secPlat.transform.localPosition = RandomizePlatform(secPlat.transform.localPosition);
+        if (thirdPlat != null) thirdPlat.transform.localPosition = RandomizePlatform(thirdPlat.transform.localPosition);
+        if (fourthPlat != null) fourthPlat.transform.localPosition = RandomizePlatform(fourthPlat.transform.localPosition);
+
+        var pos = RandomizePlatform(goalPlat.transform.localPosition);
+        goalPlat.transform.localPosition = pos;
+        pos.y += 0.75f;
+        goal.transform.localPosition = pos;
+    }
+
     public override void OnEpisodeBegin()
     {
         myepisode = stats.StartEpisode();
@@ -58,6 +77,8 @@ public class PlayerController : Agent
         move = 0;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        RandomizePlatforms();
     }
 
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
@@ -106,16 +127,6 @@ public class PlayerController : Agent
             //Debug.Log("Jumped!");
             rb.AddForce(0, jumpForce, 0, ForceMode.Impulse);
         }
-
-        // Debug.Log(jump + " " + move);
-
-        //if(jump == 1 && isGrounded)
-        //{
-        //    //Debug.Log("Jumped!");
-        //    rb.AddForce(0, 3f, 0, ForceMode.Impulse);
-        //}
-
-
 
         if (move == 0)
         {
@@ -175,6 +186,8 @@ public class PlayerController : Agent
         secPlat = FindPlat("secondPlatform");
         thirdPlat = FindPlat("thirdPlatform");
         fourthPlat = FindPlat("fourthPlatform");
+
+        goalPlat = FindPlat("goalPlatform");
 
         ground = LayerMask.GetMask("Ground");
     }
