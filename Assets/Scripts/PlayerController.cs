@@ -78,7 +78,7 @@ public class PlayerController : Agent
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        RandomizePlatforms();
+       // RandomizePlatforms();
     }
 
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
@@ -91,6 +91,7 @@ public class PlayerController : Agent
         // 3 floats
         sensor.AddObservation(rb.velocity);
 
+        /*
         // 1 value
         sensor.AddObservation(isGrounded);
 
@@ -106,6 +107,7 @@ public class PlayerController : Agent
 
         // 3 floats
         sensor.AddObservation(goal.transform.localPosition);
+        */
        
     }
 
