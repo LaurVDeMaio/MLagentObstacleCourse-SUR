@@ -34,6 +34,8 @@ public class PlayerController : Agent
     private float rCloser = 0.02f;
     private float rFurther = 0.05f;
 
+    private GameObject lastPlat;
+
     RaycastHit hit;
     LayerMask ground;
 
@@ -78,8 +80,39 @@ public class PlayerController : Agent
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-       // RandomizePlatforms();
+        // RandomizePlatforms();
+
+        firstPlat = lastPlat;
     }
+
+    public GameObject GetNextPlat()
+    {
+        if (lastPlat == startPlat)
+        {
+            if (firstPlat == null) { return goalPlat; }
+            else {return firstPlat;}
+        }
+        else if (lastPlat == firstPlat)
+        {
+            if(secPlat == null) { return firstPlat; }
+            else { return secPlat; }
+        }
+        else if (lastPlat == secPlat)
+        {
+            if (thirdPlat == null) { return secPlat; }
+            else { return thirdPlat; }
+        }
+        else if (lastPlat == thirdPlat)
+        {
+            if (fourthPlat == null) { return thirdPlat; }
+            else { return fourthPlat; }
+        }
+        else
+        {
+            return goalPlat;
+        }
+    }
+        
 
     public override void CollectObservations(VectorSensor sensor) //telling agent about its environment
     {
@@ -108,7 +141,9 @@ public class PlayerController : Agent
         // 3 floats
         sensor.AddObservation(goal.transform.localPosition);
         */
-       
+
+        sensor.AddObservation(GetNextPlat().transform.position);
+
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -249,7 +284,10 @@ public class PlayerController : Agent
 
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Ground" || collision.collider.tag == "Goal")
+        lastPlat = collision.collider.gameObject;
+
+
+        if (collision.collider.tag == "Ground" || collision.collider.tag == "Goal")
         {
             isGrounded = true;
             this.transform.parent = collision.gameObject.transform;
