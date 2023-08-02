@@ -125,7 +125,6 @@ public class PlayerController : Agent
         // 3 floats
         sensor.AddObservation(rb.velocity);
 
-        /*
         // 1 value
         sensor.AddObservation(isGrounded);
 
@@ -141,8 +140,8 @@ public class PlayerController : Agent
 
         // 3 floats
         sensor.AddObservation(goal.transform.localPosition);
-        */
 
+        // 3 floats        
         sensor.AddObservation(GetNextPlat().transform.localPosition);
 
     }
