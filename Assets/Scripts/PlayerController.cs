@@ -82,7 +82,8 @@ public class PlayerController : Agent
 
         // RandomizePlatforms();
 
-        firstPlat = lastPlat;
+        lastPlat = firstPlat;
+        
     }
 
     public GameObject GetNextPlat()
