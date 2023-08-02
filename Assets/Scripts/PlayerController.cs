@@ -143,7 +143,7 @@ public class PlayerController : Agent
         sensor.AddObservation(goal.transform.localPosition);
         */
 
-        sensor.AddObservation(GetNextPlat().transform.position);
+        sensor.AddObservation(GetNextPlat().transform.localPosition);
 
     }
 
