@@ -94,17 +94,17 @@ public class PlayerController : Agent
         }
         else if (lastPlat == firstPlat)
         {
-            if(secPlat == null) { return firstPlat; }
+            if(secPlat == null) { return goalPlat; }
             else { return secPlat; }
         }
         else if (lastPlat == secPlat)
         {
-            if (thirdPlat == null) { return secPlat; }
+            if (thirdPlat == null) { return goalPlat; }
             else { return thirdPlat; }
         }
         else if (lastPlat == thirdPlat)
         {
-            if (fourthPlat == null) { return thirdPlat; }
+            if (fourthPlat == null) { return goalPlat; }
             else { return fourthPlat; }
         }
         else
